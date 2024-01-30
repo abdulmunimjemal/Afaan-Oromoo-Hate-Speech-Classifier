@@ -52,23 +52,28 @@ Feel free to add more or improve the current implementations. (Contribute)
 
 ## Project Structure
 
-The project structure includes the implementation of a hate speech classifier using machine learning algorithms. 
-.
-├── data/
-│ ├── Labels.xlsx
-│ └── Posts.xlsx
-├── models/
-│ └── (Trained and saved models will be saved here)
-└── src/
-  ├── preprocessing/
-  │ │ ├── special_char_handler.py
-  │ │ ├── stemmer.py
-  │ │ ├── stopword_remover.py
-  │ │ ├── tokenizer.py
-  │ │ └── preprocessor.py (integrates the above all and provides a pipeline function)
-  ├── train.ipynb
-└── (Other source code files)
-├── requirements.txt
+The project structure includes the implementation of a hate speech classifier using machine learning algorithms.
+
+📂 **data/** \
+   ├── Labels.xlsx \
+   └── Posts.xlsx \
+ \
+📂 **models/** \
+   └── (Trained and saved models will be saved here) \
+ \
+📂 **src/** \
+   ├── 📂 **preprocessing/** \
+   │    ├── special_char_handler.py \
+   │    ├── stemmer.py \
+   │    ├── stopword_remover.py \
+   │    ├── tokenizer.py \
+   │    └── preprocessor.py (integrates the above all and provides a pipeline function) \
+   ├── train.ipynb \
+   └── (Other source code files) \
+ \
+📄 **requirements.txt** 
+
+
 
 ## Contribution
 Contributions are welcomed. Please follow the guidelines when contributing. :)
