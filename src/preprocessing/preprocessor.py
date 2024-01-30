@@ -1,7 +1,7 @@
 from .tokenizer import AfaanOromooTokenizer
 from .stopword_remover import StopwordRemover
 from .stemmer import AfaanOromooStemmer
-from .special_character_handler import SpecialCharacterHandler
+from .special_char_handler import SpecialCharacterHandler
 
 
 class PreprocessingPipeline:
@@ -32,7 +32,7 @@ class PreprocessingPipeline:
         self.stemmer = AfaanOromooStemmer()
         self.special_char_handler = SpecialCharacterHandler()
 
-    def preprocess(self, text: str) -> str:
+    def process(self, text: str, stem: bool = False) -> str:
         """
         Apply the preprocessing steps to the input text.
 
@@ -42,22 +42,26 @@ class PreprocessingPipeline:
         Returns:
          - str: The preprocessed text.
         """
-        # Step 1: Tokenize
+        # Step 1: Case Normalization
+        
+        text = text.lower()
+        # Step 2: Tokenize
         tokens = self.tokenizer.tokenize(text)
 
-        # Step 2: Replace special character
-        cleaned_text = self.special_char_handler.replace_special_characters(
-            " ".join(tokens), " ")
-
         # Step 3: Remove stopwrods
-        tokens_without_stopwords = self.stopword_remover.remove_stopwords(
-            cleaned_text.split())
+        tokens = self.stopword_remover.remove_stopwords(
+            tokens)
 
-        # Step 4:
-        stemmed_tokens = [self.stemmer.stem(token)
-                          for token in tokens_without_stopwords]
+        # Step 4: Stemming (If required)
+        tokens = [self.stemmer.stem(token)
+                          for token in tokens] if stem else tokens
 
         # Step 5: Join back and return
-        preprocessed_text = " ".join(stemmed_tokens)
+        preprocessed_text = " ".join(tokens)
 
         return preprocessed_text
+    
+if __name__ == "__main__":
+    pipeline = PreprocessingPipeline()
+    preprocessed_text = pipeline.process("Garaan mataa caalti.")
+    print(preprocessed_text)
