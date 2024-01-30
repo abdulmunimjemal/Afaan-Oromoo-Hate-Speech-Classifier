@@ -1,37 +1,7 @@
 import re
 import unicodedata
-
-
-def word_tokenize(text):
-    # TODO: Build a more powerful tokenizer with edge cases handler
-    words = text.split()
-    words = [word.strip().lower() for word in words]
-    return words
-
-
-def sentence_tokenize(text):
-    sentences = re.split(r'\.', text)
-    sentences = [sentence.strip() for sentence in sentences]
-    return sentences
-
-
-def tokenize_with_punctuation(text):
-    tokens = re.findall(r'\b\w+\b|\S', text)
-    return tokens
-
-
-def normalize(text):
-    # Handle accents and variations
-    # TODO: Add More replacements later
-    replacements = {"kh": "k",
-                    "’": "h",
-                    }
-    for original, normalized in replacements.items():
-        text = text.replace(original, normalized)
-    text = re.sub(r"\b'\b", "h", text)
-    normalized_text = unicodedata.normalize(
-        'NFKD', text).encode('ASCII', 'ignore').decode('utf-8')
-    return normalized_text
+from nltk import word_tokenize
+from typing import List
 
 
 class AfaanOromooTokenizer:
@@ -40,12 +10,37 @@ class AfaanOromooTokenizer:
 
     Usage:
         >>> tokenizer = AfaanOromooTokenizer()
-        >>> tokenizer.word_tokenize("Akkam Akkam")
+        >>> tokenizer.tokenize("Akkam Akkam")
     """
 
     def __init__(self):
-        pass
+        # Handle accents and variations
+        # TODO: Add More replacements later
+        self.replacements = {r"\bkh\b": "k",
+                             r"\b(\w*)['’](\w*)\b": "h"}
 
-    def tokenize(self, text):
-        text = normalize(text)
+    def word_tokenize(self, text: str) -> List[str]:
         return word_tokenize(text)
+
+    def sentence_tokenize(self, text: str) -> List[str]:
+        sentences = re.split(r'\.', text)
+        sentences = [sentence.strip() for sentence in sentences]
+        return sentences
+
+    def tokenize_with_punctuation(self, text: str) -> List[str]:
+        tokens = re.findall(r'\b\w+\b|\S', text)
+        return tokens
+
+    def normalize(self, text: str) -> str:
+        # Apply replacements
+        for pattern, replacement in self.replacements.items():
+            pattern = re.compile(pattern)
+            text = pattern.sub(replacement, text)
+
+        normalized_text = unicodedata.normalize(
+            'NFKD', text).encode('ASCII', 'ignore').decode('utf-8')
+        return normalized_text
+
+    def tokenize(self, text: str) -> List[str]:
+        normalized_text = self.normalize(text)
+        return self.word_tokenize(normalized_text)
